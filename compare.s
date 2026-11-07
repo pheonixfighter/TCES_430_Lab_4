@@ -25,7 +25,7 @@
 
 // Turns on the clock for GPIOI
 LDR R0, =RCC_BASE
-LDR R1, [RCC_BASE, #RCC_AHB1ENR]
+LDR R1, [R0, #RCC_AHB1ENR]
 ORR R1, R1, #RCC_GPIOIEN
 STR R1, [R0, #RCC_AHB1ENR]
 
@@ -46,31 +46,53 @@ ORR R1, R1, R2 // Updates bit shift in R1 to write to GPIOI_MODER
 
 
 
+// Setting up the following registers are used for the following activities:
+// R0-> Current index (increment counter)
+// R1-> address Offset
+// R2-> Maximum value
+// R3-> index of Maximum value
+// R4-> current value being compared
+
+// Set R0 to act like the increment variable in a loop
+AND R0, R0, #0
+
+// Sets R1 to 0 since our first offset will be 0
+AND R1, R1, #0
+
+// Set R2 to 0 since R2 holds the maximum absolute value, meaning that 0 is the
+// least possible value.
+AND R1, R1, #0
+
+// R3 and R4 don't need any setting up for the next part of the code
+COMPARISON_LOOP:
+	// Read Value from memory
+	LDR R4, =FLASH_DATA
+	LDR R4, [R4, R1]
+
+	// Finds absolute value of the data loaded in R3
+	ASR R5, R4, #31
+	ADD R5, R5, #31
+	EOR R4, R5, R4
+
+	// Compares the two values to each other
+	CMP R2, R4
+	BPL FINISH_LOOP // jumps to the loop conclusion program after
+					// checking if R2 still holds the greater value
+	MOVMI R2, R4 // Lets R2 hold the maximum absolut value to compare in later tuns
+	MOVMI R3, R1 // Updates the offset
 
 
 
+	FINISH_LOOP:
 
 
 
-
-
-// The following registers are used for the following activities:
-// R0-> an increment state counter
-// R1-> Maximum value
-// R2-> current value being compared
-
-
-// TODO: load value from FLASH_DATA into the max value register
-/*
-	// puts the initial value of 0 in R0 for a for loop
-	AND R0, R0, #0
-*/
 // TODO: calculate offset for next value
-// TODO: load FLASH_DATA + offset
+// TODO: load FLASH_DATA + offsetultr
 // TODO: compare against minimal value
 // TODO: go back up to the loop if we havent gone through all values (use increment)
 
-
+CHECK_GREATEST_VALUE:
 
 
 
@@ -83,14 +105,14 @@ SET_YELLOW_LED:
 
 
 
+ABSOLUTE_VALUE:
 
 
 
 // Aligning data for
 FLASH_DATA:
 .align 2
-
-	/**
+	// Positive number test set
 	.word -371502
 	.word 931252
 	.word 1239879
@@ -101,7 +123,6 @@ FLASH_DATA:
 	.word 123451
 	.word 821365
 	.word 102385126
-	*/
 
 
 	/**
