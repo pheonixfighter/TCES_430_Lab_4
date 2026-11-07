@@ -29,7 +29,7 @@ compare_LED:
 	ORR R1, R1, #RCC_GPIOIEN
 	STR R1, [R0, #RCC_AHB1ENR]
 
-	// Enables GPIO pin PI0, or pin D3 on the arduino header for Red LED
+	// Enables GPIO pin PI0, or pin D5 on the arduino header for Red LED
 	LDR R0, =GPIOI_BASE
 	LDR R1, [R0, #GPIO_MODER] // Puts the current value of GPIOI_MODER into Register R1
 	ORR R1, R1, #0b1 // Sets MODER to General Output mode
@@ -112,7 +112,7 @@ compare_LED:
 		LDR R1, [R0, #GPIO_ODR]
 		LDR R2, =0x1
 		LSL	R2, R2, #2
-		STR R1, [R0, #GPIO_ODR]
+		STR R2, [R0, #GPIO_ODR]
 		BX LR
 
 	// Aligning data for the function to compare
@@ -130,8 +130,7 @@ compare_LED:
 		.word 821365
 		.word 102385126
 
-
-		/**
+/*
 		.word -371502
 		.word -931252
 		.word -1239879
@@ -142,5 +141,5 @@ compare_LED:
 		.word -123451
 		.word -821365
 		.word -102385126
-		*/
 
+*/
