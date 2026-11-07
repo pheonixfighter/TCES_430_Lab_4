@@ -22,6 +22,8 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+extern void compare_LED(void);
+
 int main(void)
 {
 	// branch control over to native ARM assembly space
