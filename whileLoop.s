@@ -20,8 +20,8 @@ while (i > j) {
 .cpu cortex-m7
 .thumb
 
-.equ a, 10
-.equ b, 5
+.equ a, 1
+.equ b, 0
 
 .section .data
 .align 2
@@ -37,6 +37,8 @@ k:
 .section .text
 .global while_loop_program
 .align 2
+.thumb_func
+
 
 // The actual code
 while_loop_program:
@@ -55,13 +57,14 @@ while_loop_program:
 	LDR R1, [R1]
 
 	// Makes 2j and subtracts from R0 to make new i value
-	ADD R1, R1, R1;
-	SUB R0, R1;
+	ADD R1, R1, R1
+	SUB R0, R0, R1
 	LDR R1, =i
 	STR R0, [R1]
 
 	// IF LINE: compares to see j >= k
 	LDR R0, =j
+	LDR R0, [R0]
 	LDR R1, =k
 	CMP R1, R0 // Using j - k, and then using the negative flag
 	BMI POST_IF_STATEMENT
@@ -103,5 +106,6 @@ while_loop_program:
 	CMP R0, R1
 	BPL while_loop_program
 
-
+	// Extra line added so that we can see the values of i, j, and k in the debugger
+	NOP
 

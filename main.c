@@ -23,11 +23,15 @@
 #endif
 
 extern void compare_LED(void);
+extern void while_loop_program(void);
 
 int main(void)
 {
-	// branch control over to native ARM assembly space
+	// branches control over to native ARM assembly space
 	compare_LED();
+
+	// Calls the while loop program for testing
+	while_loop_program();
 
 	// Trapping loop to hold system state indefinitely
 	while(1) {
